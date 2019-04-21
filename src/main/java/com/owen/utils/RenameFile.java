@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * 1. 读取配置文件
  * 2. 遍历文件夹，获取文件名
- * 3. 如果文件名包含在配置文件中，怎进行重命名
+ * 3. 如果文件名包含在配置文件中，则进行重命名
  */
 @Slf4j
 public class RenameFile {
@@ -39,10 +39,14 @@ public class RenameFile {
                     targetName = targetName.substring(0,index)+targetName.substring(index+pt.length());
                 }
             }
+
+            //remote the . which is at the beginning of filename
             while(targetName.startsWith(".")){
                 targetName = targetName.substring(1);
             }
+            //replace duplicate .. with .
             targetName = targetName.replaceAll("\\.\\.",".");
+
             rename(targetDir,targetName);
         }else{
             File[] subFiles = targetDir.listFiles();
@@ -55,7 +59,6 @@ public class RenameFile {
     private void rename(File sourceFile,String newName){
         String parent = sourceFile.getParent();
         String newFileFuleName = parent + File.separator + newName;
-//        log.info(sourceFile+"--------------\n"+newFileFuleName);
         boolean result = sourceFile.renameTo(new File(newFileFuleName));
         if(!result){
             log.error("File rename fail: from ["+sourceFile+"] to ["+newFileFuleName+"]");
